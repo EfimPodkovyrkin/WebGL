@@ -38,8 +38,8 @@ let positionBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
 let positions = [
-    -1.0, -1.0,
-    0.5, 0.0,
+    100, 100,
+    20, 30,
     0.0, 0.7,
     1.0, 1.0,
     0.5, 0.0,
@@ -63,8 +63,9 @@ gl.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride,
 gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 gl.clearColor(0, 0, 0, 0);
 gl.clear(gl.COLOR_BUFFER_BIT);
-
+let resolution = gl.getUniformLocation(program, 'u_resolution');
 gl.useProgram(program);
+gl.uniform2f(resolution, gl.canvas.width, gl.canvas.height);
 
 gl.bindVertexArray(vao);
 let primitiveType = gl.TRIANGLES;
