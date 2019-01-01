@@ -14,7 +14,22 @@
         <p>Здесь я буду показывать свой прогресс в изучении CSS, HTML, JavaScript</p>
         <p>Каждый день я буду делать коммиты о том, что было сделанно</p>
         <canvas id="c"></canvas>
-        <script src="script.js"></script>
+        <script id="vertex" type="x-shader/x-vertex">#version 300 es
+            in vec4 a_position;
+            void main() {
+                gl_Position = a_position;
+            }
+        </script>
+
+        <script id="fragment" type="fragment">#version 300 es
+            precision mediump float;
+            out vec4 outColor;
+            void main() {
+                outColor = vec4(1.0, 0, 0.0, 1);
+            }
+        </script>
+
+        <!-- <script src="script.js"></script> -->
         <script src="webgl.js"></script>
     </body>
 </html>
