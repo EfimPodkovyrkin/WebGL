@@ -1,5 +1,6 @@
 let canvas = document.getElementById("c");
 let gl = canvas.getContext("webgl2");
+console.log(gl.canvas.width, gl.canvas.height);
 if(!gl) {
     console.log("no webgl2");
 }
@@ -38,9 +39,9 @@ let positionBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
 let positions = [
-    100, 100,
-    20, 30,
-    0.0, 0.7,
+    0, 0,
+    150, 0,
+    150, 150,
     1.0, 1.0,
     0.5, 0.0,
     0.0, 0.7
@@ -64,11 +65,13 @@ gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 gl.clearColor(0, 0, 0, 0);
 gl.clear(gl.COLOR_BUFFER_BIT);
 let resolution = gl.getUniformLocation(program, 'u_resolution');
+let color = gl.getUniformLocation(program, "u_color");
 gl.useProgram(program);
 gl.uniform2f(resolution, gl.canvas.width, gl.canvas.height);
+gl.uniform4f(color, 0.0, 1.0, 1.0, 1.0);
 
 gl.bindVertexArray(vao);
 let primitiveType = gl.TRIANGLES;
 offset = 0;
-count = 6;
+count = 3;
 gl.drawArrays(primitiveType, offset, count);
