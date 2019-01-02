@@ -21,7 +21,7 @@
                 vec2 pixelsToClip = a_position / u_resolution;
                 pixelsToClip = pixelsToClip * 2.0;
                 pixelsToClip = pixelsToClip - 1.0;
-                gl_Position = vec4(pixelsToClip, 0, 1);
+                gl_Position = vec4(pixelsToClip * vec2(1, -1), 0, 1);
             }
         </script>
 
