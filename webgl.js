@@ -1,7 +1,7 @@
 let canvas = document.getElementById("c");
 let gl = canvas.getContext("webgl2");
 console.log(gl.canvas.width, gl.canvas.height);
-if(!gl) {
+if (!gl) {
     console.log("no webgl2");
 }
 let vertex = document.getElementById("vertex").innerHTML;
@@ -40,8 +40,8 @@ gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
 let positions = [
     0, 0,
-    150, 0,
-    150, 150,
+    140, 0,
+    140, 140,
     1.0, 1.0,
     0.5, 0.0,
     0.0, 0.7
@@ -68,10 +68,44 @@ let resolution = gl.getUniformLocation(program, 'u_resolution');
 let color = gl.getUniformLocation(program, "u_color");
 gl.useProgram(program);
 gl.uniform2f(resolution, gl.canvas.width, gl.canvas.height);
-gl.uniform4f(color, 0.0, 1.0, 1.0, 1.0);
+gl.uniform4f(color, 0.0, 0.0, 0.0, 1.0);
 
-gl.bindVertexArray(vao);
+
 let primitiveType = gl.TRIANGLES;
 offset = 0;
 count = 3;
-gl.drawArrays(primitiveType, offset, count);
+
+function randomInt(n) {
+    return Math.random() * n;
+}
+
+function Draw() {
+    gl.drawArrays(primitiveType, offset, count);
+};
+
+function GenerateTriangle() {
+    let x1, x2, y1, y2;
+    x1 = randomInt(300);
+    x2 = randomInt(300);
+    y1 = randomInt(300);
+    y2 = randomInt(300);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([x1, y1, x1, y2, x2, y1, x2, y2]), gl.STATIC_DRAW);
+    return;
+    throw new Error("notImplemented");
+};
+
+function GenerateTriangleColor() {
+    gl.uniform4f(color, Math.random(), Math.random(), Math.random(), Math.random());
+    return;
+    throw new Error("notImplemented");
+};
+
+function DrawRectangles(n) {
+    for (let i = 0; i < n; ++i) {
+        GenerateTriangle();
+        GenerateTriangleColor();
+        Draw();
+    }
+}
+
+DrawRectangles(10);
