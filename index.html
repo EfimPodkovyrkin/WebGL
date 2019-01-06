@@ -17,23 +17,28 @@
         <script id="vertex" type="x-shader/x-vertex">#version 300 es
             in vec2 a_position;
             uniform vec2 u_resolution;
+            out vec2 v_texCoord;
+            in vec2 a_texCoord;
             void main() {
                 vec2 pixelsToClip = a_position / u_resolution;
                 pixelsToClip = pixelsToClip * 2.0;
                 pixelsToClip = pixelsToClip - 1.0;
                 gl_Position = vec4(pixelsToClip * vec2(1, -1), 0, 1);
+
+                v_texCoord = a_texCoord;
             }
         </script>
 
         <script id="fragment" type="fragment">#version 300 es
             precision mediump float;
             uniform vec4 u_color;
+            uniform sampler2D u_image;
             out vec4 outColor;
+            in vec2 v_texCoord;
             void main() {
-                outColor = u_color;
+                outColor = texture(u_image, v_texCoord);
             }
         </script>
-
         <!-- <script src="script.js"></script> -->
         <script src="webgl.js"></script>
     </body>

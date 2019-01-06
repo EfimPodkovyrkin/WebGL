@@ -1,11 +1,48 @@
+//get context
 let canvas = document.getElementById("c");
 let gl = canvas.getContext("webgl2");
 console.log(gl.canvas.width, gl.canvas.height);
 if (!gl) {
     console.log("no webgl2");
 }
-let vertex = document.getElementById("vertex").innerHTML;
-let fragment = document.getElementById("fragment").innerHTML;
+let vertex = document.getElementById("vertex").innerText;
+let fragment = document.getElementById("fragment").innerText;
+
+//init shaders, programms
+let vertexShader = createShader(gl, gl.VERTEX_SHADER, vertex);
+let fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragment);
+let program = createProgram(gl, vertexShader, fragmentShader);
+
+//set data
+let positions = [];
+let positionAttributeLocation = gl.getAttribLocation(program, "a_position");
+let positionBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+gl.enableVertexAttribArray(positionAttributeLocation);
+let size = 2;
+let type = gl.FLOAT;
+let normalize = false;
+let stride = 0;
+let offset = 0;
+gl.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset);
+
+//prepare screen
+gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+gl.clearColor(0, 0, 0, 0);
+gl.clear(gl.COLOR_BUFFER_BIT);
+let resolution = gl.getUniformLocation(program, 'u_resolution');
+let color = gl.getUniformLocation(program, "u_color");
+gl.useProgram(program);
+gl.uniform2f(resolution, gl.canvas.width, gl.canvas.height);
+gl.uniform4f(color, 0.0, 0.0, 0.0, 1.0);
+
+
+let primitiveType = gl.TRIANGLES;
+offset = 0;
+count = 3;
+
+DrawRectangles(1);
 
 function createShader(gl, type, source) {
     let shader = gl.createShader(type);
@@ -29,52 +66,6 @@ function createProgram(gl, vertex, fragment) {
     gl.deleteProgram(programm);
 }
 
-//init
-let vertexShader = createShader(gl, gl.VERTEX_SHADER, vertex);
-let fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragment);
-let program = createProgram(gl, vertexShader, fragmentShader);
-
-let positionAttributeLocation = gl.getAttribLocation(program, "a_position");
-let positionBuffer = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-
-let positions = [
-    0, 0,
-    140, 0,
-    140, 140,
-    1.0, 1.0,
-    0.5, 0.0,
-    0.0, 0.7
-];
-gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
-
-let vao = gl.createVertexArray();
-gl.bindVertexArray(vao);
-gl.enableVertexAttribArray(positionAttributeLocation);
-
-let size = 2;
-let type = gl.FLOAT;
-let normalize = false;
-let stride = 0;
-let offset = 0;
-gl.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset);
-
-// webglUtils.resizeCanvasToDisplaySize(gl.canvas);
-
-gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-gl.clearColor(0, 0, 0, 0);
-gl.clear(gl.COLOR_BUFFER_BIT);
-let resolution = gl.getUniformLocation(program, 'u_resolution');
-let color = gl.getUniformLocation(program, "u_color");
-gl.useProgram(program);
-gl.uniform2f(resolution, gl.canvas.width, gl.canvas.height);
-gl.uniform4f(color, 0.0, 0.0, 0.0, 1.0);
-
-
-let primitiveType = gl.TRIANGLES;
-offset = 0;
-count = 3;
-
 function randomInt(n) {
     return Math.random() * n;
 }
@@ -91,13 +82,11 @@ function GenerateTriangle() {
     y2 = randomInt(300);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([x1, y1, x1, y2, x2, y1, x2, y2]), gl.STATIC_DRAW);
     return;
-    throw new Error("notImplemented");
 };
 
 function GenerateTriangleColor() {
     gl.uniform4f(color, Math.random(), Math.random(), Math.random(), Math.random());
     return;
-    throw new Error("notImplemented");
 };
 
 function DrawRectangles(n) {
@@ -108,4 +97,3 @@ function DrawRectangles(n) {
     }
 }
 
-DrawRectangles(10);
